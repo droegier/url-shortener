@@ -57,7 +57,7 @@ def index(request):
         'absolute_index_url': get_absolute_short_url(request, ''),
     })
 
-@basic_auth_required
+# @basic_auth_required
 def preview(request, alias):
     link = get_object_or_404(Link, alias__iexact=alias)
     return render(request, 'url_shortener/preview.html', {
@@ -73,7 +73,7 @@ def redirect(request, alias, extra=''):
     link.save()
     return HttpResponsePermanentRedirect(link.url + extra)
 
-@basic_auth_required
+# @basic_auth_required
 def analytics(request):
     links = list(Link.objects.all().order_by('-id'))
     if not links:
