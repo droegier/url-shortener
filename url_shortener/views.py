@@ -11,12 +11,9 @@ from .misc import (hash_encode,
 from .forms import URLShortenerForm
 from .models import Link
 
-# from basicauth.decorators import basic_auth_required
-
 import base64
 import logging
 
-# @basic_auth_required
 def index(request):
     auth_header = request.META.get('HTTP_AUTHORIZATION', '')
     token_type, _, credentials = auth_header.partition(' ')
@@ -60,7 +57,6 @@ def index(request):
         'absolute_index_url': get_absolute_short_url(request, ''),
     })
 
-# @basic_auth_required
 def preview(request, alias):
     link = get_object_or_404(Link, alias__iexact=alias)
     return render(request, 'url_shortener/preview.html', {
@@ -76,8 +72,21 @@ def redirect(request, alias, extra=''):
     link.save()
     return HttpResponsePermanentRedirect(link.url + extra)
 
-# @basic_auth_required
 def analytics(request):
+
+    auth_header = request.META.get('HTTP_AUTHORIZATION', '')
+    token_type, _, credentials = auth_header.partition(' ')
+    logging.info('Credentials : ' + credentials)
+
+    expected = base64.b64encode(b'admin:we<3lawyers').decode()
+    logging.info('Expected : ' + expected)
+
+    if token_type != 'Basic' or credentials != expected:
+        logging.info('return 401')
+        response = HttpResponse(status=401)
+        response['WWW-Authenticate'] = 'Basic realm="Application"'
+        return response
+
     links = list(Link.objects.all().order_by('-id'))
     if not links:
         return render(request, 'url_shortener/analytics.html')
