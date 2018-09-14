@@ -20,7 +20,7 @@ APP_DIR = os.path.join(BASE_DIR, 'url_shortener')
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY')
-
+HTTP_AUTH = os.environ.get('HTTP_AUTH')
 
 # Application definition
 

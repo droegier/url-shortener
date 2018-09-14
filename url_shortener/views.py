@@ -10,8 +10,22 @@ from .misc import (hash_encode,
 from .forms import URLShortenerForm
 from .models import Link
 
+# import base64
+# import logging
 
+@basic_auth_required
 def index(request):
+    #auth_header = request.META.get('HTTP_AUTHORIZATION', '')
+    #token_type, _, credentials = auth_header.partition(' ')
+    #logging.info('Credentials : ' + credentials)
+
+    #expected = base64.b64encode(os.environ['HTTP_AUTH']).decode()
+    #logging.info('Expected : ' + expected)
+
+    #if token_type != 'Basic' or credentials != expected:
+    #    logging.info('return 401')
+    #    return HttpResponse(status=401)
+
     if request.method == 'POST':
         form = URLShortenerForm(request.POST)
         if form.is_valid():
@@ -41,7 +55,7 @@ def index(request):
         'absolute_index_url': get_absolute_short_url(request, ''),
     })
 
-
+@basic_auth_required
 def preview(request, alias):
     link = get_object_or_404(Link, alias__iexact=alias)
     return render(request, 'url_shortener/preview.html', {
@@ -57,7 +71,7 @@ def redirect(request, alias, extra=''):
     link.save()
     return HttpResponsePermanentRedirect(link.url + extra)
 
-
+@basic_auth_required
 def analytics(request):
     links = list(Link.objects.all().order_by('-id'))
     if not links:
