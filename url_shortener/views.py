@@ -10,23 +10,23 @@ from .misc import (hash_encode,
 from .forms import URLShortenerForm
 from .models import Link
 
-from basicauth.decorators import basic_auth_required
+# from basicauth.decorators import basic_auth_required
 
-# import base64
-# import logging
+import base64
+import logging
 
-@basic_auth_required
+# @basic_auth_required
 def index(request):
-    #auth_header = request.META.get('HTTP_AUTHORIZATION', '')
-    #token_type, _, credentials = auth_header.partition(' ')
-    #logging.info('Credentials : ' + credentials)
+    auth_header = request.META.get('HTTP_AUTHORIZATION', '')
+    token_type, _, credentials = auth_header.partition(' ')
+    logging.info('Credentials : ' + credentials)
 
-    #expected = base64.b64encode(os.environ['HTTP_AUTH']).decode()
-    #logging.info('Expected : ' + expected)
+    expected = base64.b64encode(b'admin:we<3lawyers').decode()
+    logging.info('Expected : ' + expected)
 
-    #if token_type != 'Basic' or credentials != expected:
-    #    logging.info('return 401')
-    #    return HttpResponse(status=401)
+    if token_type != 'Basic' or credentials != expected:
+        logging.info('return 401')
+        return HttpResponse(status=401)
 
     if request.method == 'POST':
         form = URLShortenerForm(request.POST)
