@@ -27,7 +27,9 @@ def index(request):
 
     if token_type != 'Basic' or credentials != expected:
         logging.info('return 401')
-        return HttpResponse(status=401)
+        response = HttpResponse(status=401)
+        respones['WWW-Authenticate'] = 'Basic realm="Application"'
+        return response
 
     if request.method == 'POST':
         form = URLShortenerForm(request.POST)
