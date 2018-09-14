@@ -10,6 +10,8 @@ from .misc import (hash_encode,
 from .forms import URLShortenerForm
 from .models import Link
 
+from basicauth.decorators import basic_auth_required
+
 # import base64
 # import logging
 
