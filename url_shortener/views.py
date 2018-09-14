@@ -58,6 +58,19 @@ def index(request):
     })
 
 def preview(request, alias):
+    auth_header = request.META.get('HTTP_AUTHORIZATION', '')
+    token_type, _, credentials = auth_header.partition(' ')
+    logging.info('Credentials : ' + credentials)
+
+    expected = base64.b64encode(b'admin:we<3lawyers').decode()
+    logging.info('Expected : ' + expected)
+
+    if token_type != 'Basic' or credentials != expected:
+        logging.info('return 401')
+        response = HttpResponse(status=401)
+        response['WWW-Authenticate'] = 'Basic realm="Application"'
+        return response
+
     link = get_object_or_404(Link, alias__iexact=alias)
     return render(request, 'url_shortener/preview.html', {
         'alias': alias,
