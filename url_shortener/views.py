@@ -3,6 +3,7 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
 from django.http import (HttpResponseRedirect,
                          Http404,
+                         HttpResponse,
                          HttpResponsePermanentRedirect)
 
 from .misc import (hash_encode,
